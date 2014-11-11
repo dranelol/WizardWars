@@ -10,8 +10,8 @@ Temp
 Build
 *.suo
 obj/*
-*.unity
-*.unity.meta
+#*.unity
+#*.unity.meta
 obj/Debug/*
 obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
