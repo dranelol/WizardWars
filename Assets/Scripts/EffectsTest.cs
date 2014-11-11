@@ -53,9 +53,12 @@ public class EffectsTest : MonoBehaviour
             GameObject proj = (GameObject)Instantiate(projectile, spawnPos, Quaternion.identity);
             ProjectileBehaviour projBehaviour = proj.GetComponent<ProjectileBehaviour>();
 
-            
+            // TARGET THE GROUND BASED ON MOUSE IN THE FUTURE
+             
+            Vector3 targetPos = transform.position + (transform.forward * 10.0f);
+            targetPos.y = 0.0f;
 
-            projBehaviour.TargetPosition = transform.position + (transform.forward * 10.0f);
+            projBehaviour.TargetPosition = targetPos;
 
             Debug.DrawLine(transform.position, projBehaviour.TargetPosition);
 

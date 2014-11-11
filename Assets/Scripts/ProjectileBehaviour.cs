@@ -18,20 +18,22 @@ public class ProjectileBehaviour : MonoBehaviour
     /// <summary>
     /// Is this a homing projectile?
     /// </summary>
-    public bool homing = false;
+    public bool Ballistic = false;
 
     /// <summary>
     /// Speed of the projectile
     /// </summary>
-    public float speed;
+    public float Speed;
 
     /// <summary>
     /// acceleration of the projectile
     /// </summary>
-    public float acceleration;
+    public float Acceleration;
 
 
     public string Name;
+
+    public bool frozen = false;
 
 
     void Awake()
@@ -45,43 +47,52 @@ public class ProjectileBehaviour : MonoBehaviour
 
 	void Update () 
     {
-        if (TargetObject != null)
-        {
-            transform.LookAt(TargetObject.transform.position);
-        }
-
-        if (TargetPosition != null)
-        {
-            transform.LookAt(TargetPosition);
-        }
-        // if this is a homing projectile, rotate towards our homing target
-
-        if (homing == true)
+        if (frozen == false)
         {
             if (TargetObject != null)
             {
-                Vector3 direction = TargetObject.transform.position - transform.position;
-
-                Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.3f, 0f);
-                transform.rotation = Quaternion.LookRotation(newDirection);
+                transform.LookAt(TargetObject.transform.position);
             }
-            else
+
+            if (TargetPosition != null)
             {
+                transform.LookAt(TargetPosition);
+            }
+            // if this is a ballistic projectile, rotate towards our homing target
 
-                Vector3 direction = TargetPosition - transform.position;
+            if (Ballistic == true)
+            {
+                if (TargetObject != null)
+                {
+                    Vector3 direction = TargetObject.transform.position - transform.position;
 
-                Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.3f, 0f);
-                transform.rotation = Quaternion.LookRotation(newDirection);
+                    Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.3f, 0f);
+                    if (newDirection != Vector3.zero)
+                    {
+                        transform.rotation = Quaternion.LookRotation(newDirection);
+                    }
+
+                }
+                else if (TargetPosition != null)
+                {
+
+                    Vector3 direction = TargetPosition - transform.position;
+
+                    Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.3f, 0f);
+                    if (newDirection != Vector3.zero)
+                    {
+                        transform.rotation = Quaternion.LookRotation(newDirection);
+                    }
+                }
+
+
             }
 
-            
+            // move along the path
+            transform.position = transform.position + transform.forward * Time.deltaTime * Speed;
+            Speed += Acceleration * Time.deltaTime;
+
         }
-
-        // move along the path
-        transform.position = transform.position + transform.forward * Time.deltaTime * speed;
-        speed += acceleration * Time.deltaTime;
-
-        
 
 
 	}
@@ -98,5 +109,20 @@ public class ProjectileBehaviour : MonoBehaviour
             //item.enableEmission = false; 
         }
         //particles.GetComponent<ParticleAnimator>().autodestruct = true;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("hi");
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("Environment")
+         || other.gameObject.layer == LayerMask.NameToLayer("Terrain"))
+        {
+            
+            if (frozen == false)
+            {
+                frozen = true;
+            }
+        }
     }
 }
