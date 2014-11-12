@@ -66,8 +66,7 @@ Shader "Shader Forge/Distortion" {
                 i.normalDir = normalize(i.normalDir);
                 i.screenPos = float4( i.screenPos.xy / i.screenPos.w, 0, 0 );
                 i.screenPos.y *= _ProjectionParams.x;
-                float2 node_2 = i.uv0;
-                float2 node_3 = (node_2.rg*1.0);
+                float2 node_3 = (i.uv0.rg*1.0);
                 float4 node_5 = tex2D(_Refraction,TRANSFORM_TEX(node_3, _Refraction));
                 float2 sceneUVs = float2(1,grabSign)*i.screenPos.xy*0.5+0.5 + ((node_5.rgb.rg*_Distortion)*_Distortion);
                 float4 sceneColor = tex2D(_GrabTexture, sceneUVs);
@@ -154,8 +153,7 @@ Shader "Shader Forge/Distortion" {
                 i.normalDir = normalize(i.normalDir);
                 i.screenPos = float4( i.screenPos.xy / i.screenPos.w, 0, 0 );
                 i.screenPos.y *= _ProjectionParams.x;
-                float2 node_2 = i.uv0;
-                float2 node_3 = (node_2.rg*1.0);
+                float2 node_3 = (i.uv0.rg*1.0);
                 float4 node_5 = tex2D(_Refraction,TRANSFORM_TEX(node_3, _Refraction));
                 float2 sceneUVs = float2(1,grabSign)*i.screenPos.xy*0.5+0.5 + ((node_5.rgb.rg*_Distortion)*_Distortion);
                 float4 sceneColor = tex2D(_GrabTexture, sceneUVs);
