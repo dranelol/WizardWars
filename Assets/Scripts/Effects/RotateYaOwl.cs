@@ -22,9 +22,17 @@ public class RotateYaOwl : MonoBehaviour
         //transform.LookAt(Anchor.transform);
 
 
-        Debug.DrawLine(Anchor.transform.position, Anchor.transform.position + rotationAxis);
+        //Debug.DrawLine(Anchor.transform.position, Anchor.transform.position + rotationAxis);
 
-        transform.RotateAround(Anchor.transform.position, rotationAxis.normalized, owlsPerSecond);                             
+        if (Anchor != null)
+        {
+            transform.RotateAround(Anchor.transform.position, rotationAxis.normalized, owlsPerSecond);
+        }
+
+        else
+        {
+            transform.Rotate(Vector3.forward, owlsPerSecond, Space.World);
+        }
 
         
 	}
