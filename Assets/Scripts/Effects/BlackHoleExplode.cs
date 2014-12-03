@@ -59,16 +59,22 @@ public class BlackHoleExplode : MonoBehaviour
 
         foreach (Collider col in cols)
         {
-            if (col.gameObject.tag != "Terrain")
+            if (col != null)
             {
-                if (col.gameObject.rigidbody == null)
+                if (col.gameObject != gameObject)
                 {
-                    col.gameObject.AddComponent<Rigidbody>();
-                }
-                Rigidbody body = col.gameObject.GetComponent<Rigidbody>();
-                body.AddExplosionForce(2000, transform.position, 50);
+                    if (col.gameObject.layer == LayerMask.NameToLayer("Environment"))
+                    {
+                        if (col.gameObject.rigidbody == null)
+                        {
+                            col.gameObject.AddComponent<Rigidbody>();
+                        }
+                        Rigidbody body = col.gameObject.GetComponent<Rigidbody>();
+                        body.AddExplosionForce(2000, transform.position, 50);
 
-               
+
+                    }
+                }
             }
         }
 

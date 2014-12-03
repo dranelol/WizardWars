@@ -8,9 +8,11 @@ public class GameManager : MonoBehaviour {
 
     public List<GameObject> Effects;
 
+    public GameObject Player;
+    public Transform PlayerRespawn;
     void Awake()
     {
-
+        Player = GameObject.FindGameObjectWithTag("Player");
     }
 
 	// Use this for initialization
@@ -22,6 +24,9 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
     {
-	    
+        if (Player.transform.position.y < -1)
+        {
+            Player.transform.position = PlayerRespawn.position;
+        }
 	}
 }
