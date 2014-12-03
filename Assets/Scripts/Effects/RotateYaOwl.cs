@@ -13,8 +13,13 @@ public class RotateYaOwl : MonoBehaviour
 
 	void Start () 
     {
-        Vector3 axis = transform.position - Anchor.transform.position;
-        rotationAxis = Vector3.Cross(axis, Anchor.transform.forward);
+        if (Anchor != null)
+        {
+            Vector3 axis = transform.position - Anchor.transform.position;
+            rotationAxis = Vector3.Cross(axis, Anchor.transform.forward);
+
+        }
+        
 	}
 	
 	void Update () 

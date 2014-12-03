@@ -21,7 +21,7 @@ public class DestroyAndSpawn : MonoBehaviour
         {
             Destroy(gameObject);
             GameObject spawn = (GameObject)Instantiate(ToSpawn, transform.position, Quaternion.identity);
-        
+            /*
             Collider[] cols = Physics.OverlapSphere(transform.position, 500);
 
             foreach(Collider col in cols)
@@ -32,6 +32,7 @@ public class DestroyAndSpawn : MonoBehaviour
                     body.AddExplosionForce(1000, transform.position, 50);
                 }
             }
+             */
         
         }
     }
