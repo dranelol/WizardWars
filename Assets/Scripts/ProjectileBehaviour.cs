@@ -35,9 +35,16 @@ public class ProjectileBehaviour : MonoBehaviour
 
     public bool frozen = false;
 
+    public float InitialUpwardsForwardRotation;
+
 
     void Awake()
     {
+        // start by angling the projectile upwards according to the initial forward rotation
+
+        
+
+
     }
 
 	void Start () 
@@ -49,15 +56,7 @@ public class ProjectileBehaviour : MonoBehaviour
     {
         if (frozen == false)
         {
-            if (TargetObject != null)
-            {
-                transform.LookAt(TargetObject.transform.position);
-            }
-
-            if (TargetPosition != null)
-            {
-                transform.LookAt(TargetPosition);
-            }
+            
             // if this is a ballistic projectile, rotate towards our homing target
 
             if (Ballistic == true)
@@ -66,7 +65,7 @@ public class ProjectileBehaviour : MonoBehaviour
                 {
                     Vector3 direction = TargetObject.transform.position - transform.position;
 
-                    Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.3f, 0f);
+                    Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.01f, 0f);
                     if (newDirection != Vector3.zero)
                     {
                         transform.rotation = Quaternion.LookRotation(newDirection);
@@ -78,7 +77,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
                     Vector3 direction = TargetPosition - transform.position;
 
-                    Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.3f, 0f);
+                    Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.01f, 0f);
                     if (newDirection != Vector3.zero)
                     {
                         transform.rotation = Quaternion.LookRotation(newDirection);
@@ -88,9 +87,34 @@ public class ProjectileBehaviour : MonoBehaviour
 
             }
 
+            else
+            {
+                if (TargetObject != null)
+                {
+                    transform.LookAt(TargetObject.transform.position);
+                }
+
+                if (TargetPosition != null)
+                {
+                    transform.LookAt(TargetPosition);
+                }
+            }
+
             // move along the path
             transform.position = transform.position + transform.forward * Time.deltaTime * Speed;
             Speed += Acceleration * Time.deltaTime;
+
+            // checks to stop
+
+            if (TargetPosition != null)
+            {
+                if (Vector3.Distance(transform.position, TargetPosition) <= 0.5f)
+                {
+                    frozen = true;
+
+                    Messenger.Broadcast(Name + "ProjectileFrozen");
+                }
+            }
 
         }
 

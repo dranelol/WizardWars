@@ -45,23 +45,22 @@ public class EffectsTest : MonoBehaviour
             StartCoroutine(DoEffect(Effects[effectsItr], 2.0f));
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q))
         {
             Vector3 spawnPos = transform.position;
-            spawnPos.y += 10.0f;
+            //spawnPos.y += 10.0f;
 
             GameObject proj = (GameObject)Instantiate(projectile, spawnPos, Quaternion.identity);
             ProjectileBehaviour projBehaviour = proj.GetComponent<ProjectileBehaviour>();
 
             // TARGET THE GROUND BASED ON MOUSE IN THE FUTURE
              
-            Vector3 targetPos = transform.position + (transform.forward * 10.0f);
+            Vector3 targetPos = transform.position + (transform.forward * 20.0f);
             targetPos.y = 0.0f;
 
             projBehaviour.TargetPosition = targetPos;
 
-            Debug.DrawLine(transform.position, projBehaviour.TargetPosition);
-
+            proj.transform.forward = transform.forward;
             
         }
 	}
