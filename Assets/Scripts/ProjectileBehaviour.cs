@@ -83,7 +83,7 @@ public class ProjectileBehaviour : MonoBehaviour
                 {
                     Vector3 direction = TargetObject.transform.position - transform.position;
 
-                    Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.01f, 0f);
+                    Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, Time.deltaTime * Speed * 0.05f, 0f);
                     if (newDirection != Vector3.zero)
                     {
                         transform.rotation = Quaternion.LookRotation(newDirection);
@@ -95,7 +95,7 @@ public class ProjectileBehaviour : MonoBehaviour
 
                     Vector3 direction = TargetPosition - transform.position;
 
-                    Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, 0.01f, 0f);
+                    Vector3 newDirection = Vector3.RotateTowards(transform.forward, direction, Time.deltaTime * Speed * 0.05f, 0f);
                     if (newDirection != Vector3.zero)
                     {
                         transform.rotation = Quaternion.LookRotation(newDirection);
@@ -120,17 +120,18 @@ public class ProjectileBehaviour : MonoBehaviour
             
 
             // move along the path
-            //transform.position = transform.position + transform.forward * Time.deltaTime * Speed;
+            transform.position = transform.position + transform.forward * Time.deltaTime * Speed;
             Speed += Acceleration * Time.deltaTime;
 
-            GetComponent<Rigidbody>().velocity = transform.forward * Speed;
-            
+            //GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 
+            Debug.Log("distance:" + Vector3.Distance(transform.position, TargetPosition));
+            Debug.Log("forward speed: " + transform.forward.magnitude * Time.deltaTime * Speed);
             // checks to stop
 
             if (TargetPosition != null)
             {
-                if (Vector3.Distance(transform.position, TargetPosition) <= 5.0f)
+                if (Vector3.Distance(transform.position, TargetPosition) <= transform.forward.magnitude * Time.deltaTime * Speed)
                 {
                     Debug.Log("asd");
                     frozen = true;

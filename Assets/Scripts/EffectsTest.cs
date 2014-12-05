@@ -58,7 +58,7 @@ public class EffectsTest : MonoBehaviour
 
             // TARGET THE GROUND BASED ON MOUSE IN THE FUTURE
             
-            Vector3 targetPos = transform.position + (transform.forward * 10.0f);
+            Vector3 targetPos = transform.position + (transform.forward * 25.0f);
             targetPos.y = 0.0f;
 
             projBehaviour.TargetPosition = targetPos;
