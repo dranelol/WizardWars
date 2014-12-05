@@ -14,6 +14,8 @@ public class EffectsTest : MonoBehaviour
 
     int effectsItr;
 
+    int punchCount = 0;
+
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
@@ -61,6 +63,8 @@ public class EffectsTest : MonoBehaviour
             projBehaviour.TargetPosition = targetPos;
 
             proj.transform.forward = transform.forward;
+
+            punchCount++;
             
         }
 	}
@@ -68,6 +72,7 @@ public class EffectsTest : MonoBehaviour
     void OnGUI()
     {
         GUI.Box(new Rect(0, 0, Screen.width * 0.1f, Screen.height * 0.1f), "effect: " + effectsItr.ToString());
+        GUI.Box(new Rect(0, 100, Screen.width * 0.2f, Screen.height * 0.1f), "punches: " + punchCount.ToString());
 
     }
 
