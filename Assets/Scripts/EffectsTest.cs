@@ -45,7 +45,7 @@ public class EffectsTest : MonoBehaviour
             StartCoroutine(DoEffect(Effects[effectsItr], 2.0f));
         }
 
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             Vector3 spawnPos = transform.position;
             //spawnPos.y += 10.0f;

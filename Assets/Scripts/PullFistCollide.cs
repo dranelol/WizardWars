@@ -16,9 +16,9 @@ public class PullFistCollide : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Enemy")
+        if (other.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
-            Messenger.Broadcast<GameObject>("PullFistHit", other.gameObject);
+            Messenger.Broadcast<GameObject, GameObject>("PullFistHit", gameObject, other.gameObject);
         }
     }
 }

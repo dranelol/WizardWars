@@ -30,6 +30,10 @@ public class ProjectileBehaviour : MonoBehaviour
     /// </summary>
     public float Acceleration;
 
+    public bool CollidesWithTerrain = false;
+
+    public bool CollidesWithEnvironment = false;
+
 
     public string Name;
 
@@ -49,14 +53,14 @@ public class ProjectileBehaviour : MonoBehaviour
 
 	void Start () 
     {
-	    
+        
 	}
 
 	void Update () 
     {
         if (frozen == false)
         {
-            
+
             // if this is a ballistic projectile, rotate towards our homing target
 
             if (Ballistic == true)
@@ -104,6 +108,8 @@ public class ProjectileBehaviour : MonoBehaviour
             transform.position = transform.position + transform.forward * Time.deltaTime * Speed;
             Speed += Acceleration * Time.deltaTime;
 
+            GetComponent<Rigidbody>().velocity = transform.forward * Speed;
+
             // checks to stop
 
             if (TargetPosition != null)
@@ -111,6 +117,8 @@ public class ProjectileBehaviour : MonoBehaviour
                 if (Vector3.Distance(transform.position, TargetPosition) <= 0.5f)
                 {
                     frozen = true;
+
+                    GetComponent<Rigidbody>().velocity = Vector3.zero;
 
                     Messenger.Broadcast(Name + "ProjectileFrozen");
                 }
@@ -139,14 +147,34 @@ public class ProjectileBehaviour : MonoBehaviour
     {
         Debug.Log("hi");
 
-        if (other.gameObject.layer == LayerMask.NameToLayer("Environment")
-         || other.gameObject.layer == LayerMask.NameToLayer("Terrain"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Environment") && CollidesWithEnvironment == true)
         {
-            
             if (frozen == false)
             {
                 frozen = true;
+
+                GetComponent<Rigidbody>().velocity = Vector3.zero;
             }
+        }
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("Terrain") && CollidesWithTerrain == true)
+        {
+            if (frozen == false)
+            {
+                frozen = true;
+
+                GetComponent<Rigidbody>().velocity = Vector3.zero;
+            }
+        }
+    }
+
+    public void SetFrozen(bool freeze)
+    {
+        frozen = freeze;
+
+        if (frozen == true)
+        {
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
     }
 }
