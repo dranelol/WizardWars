@@ -14,6 +14,8 @@ public class EffectsTest : MonoBehaviour
 
     int effectsItr;
 
+    int punchCount = 0;
+
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
@@ -51,16 +53,21 @@ public class EffectsTest : MonoBehaviour
             //spawnPos.y += 10.0f;
 
             GameObject proj = (GameObject)Instantiate(projectile, spawnPos, Quaternion.identity);
+            
             ProjectileBehaviour projBehaviour = proj.GetComponent<ProjectileBehaviour>();
 
             // TARGET THE GROUND BASED ON MOUSE IN THE FUTURE
-             
-            Vector3 targetPos = transform.position + (transform.forward * 20.0f);
+            
+            Vector3 targetPos = transform.position + (transform.forward * 10.0f);
             targetPos.y = 0.0f;
 
             projBehaviour.TargetPosition = targetPos;
-
             proj.transform.forward = transform.forward;
+
+            Debug.DrawLine(transform.position, targetPos);
+            
+
+            punchCount++;
             
         }
 	}
@@ -68,6 +75,7 @@ public class EffectsTest : MonoBehaviour
     void OnGUI()
     {
         GUI.Box(new Rect(0, 0, Screen.width * 0.1f, Screen.height * 0.1f), "effect: " + effectsItr.ToString());
+        GUI.Box(new Rect(0, 100, Screen.width * 0.2f, Screen.height * 0.1f), "punches: " + punchCount.ToString());
 
     }
 

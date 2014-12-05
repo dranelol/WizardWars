@@ -48,12 +48,26 @@ public class ProjectileBehaviour : MonoBehaviour
 
         
 
-
+       // GetComponent<Rigidbody>().velocity = transform.forward * Speed;
     }
 
 	void Start () 
     {
-        
+        Vector3 startPos = transform.position;
+
+        Vector3 forwardProject = transform.position + transform.forward;
+
+        float dist = Vector3.Distance(startPos, forwardProject);
+
+        float height = dist * (Mathf.Sin(InitialUpwardsForwardRotation) / Mathf.Sin(90 - InitialUpwardsForwardRotation));
+
+        Vector3 lookPoint = new Vector3(forwardProject.x, forwardProject.y + height, forwardProject.z);
+
+        Vector3 lookVector = lookPoint - transform.position;
+
+        transform.rotation = Quaternion.LookRotation(lookVector);
+
+        Debug.Log(Vector3.Angle(lookVector, forwardProject - startPos));
 	}
 
 	void Update () 
@@ -103,19 +117,22 @@ public class ProjectileBehaviour : MonoBehaviour
                     transform.LookAt(TargetPosition);
                 }
             }
+            
 
             // move along the path
-            transform.position = transform.position + transform.forward * Time.deltaTime * Speed;
+            //transform.position = transform.position + transform.forward * Time.deltaTime * Speed;
             Speed += Acceleration * Time.deltaTime;
 
             GetComponent<Rigidbody>().velocity = transform.forward * Speed;
+            
 
             // checks to stop
 
             if (TargetPosition != null)
             {
-                if (Vector3.Distance(transform.position, TargetPosition) <= 0.5f)
+                if (Vector3.Distance(transform.position, TargetPosition) <= 5.0f)
                 {
+                    Debug.Log("asd");
                     frozen = true;
 
                     GetComponent<Rigidbody>().velocity = Vector3.zero;
