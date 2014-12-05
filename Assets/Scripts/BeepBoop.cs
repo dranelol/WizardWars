@@ -38,8 +38,8 @@ public class BeepBoop : MonoBehaviour
         while (Vector3.Distance(transform.position, toPull.transform.position) > 1.0f)
         {
             Debug.Log("asd");
-            toPull.transform.position = Vector3.MoveTowards(toPull.transform.position, transform.position, 0.9f);
-            yield return new WaitForSeconds(0.01f);
+            toPull.transform.position = Vector3.MoveTowards(toPull.transform.position, transform.position, 1.0f);
+            yield return new WaitForSeconds(0.025f);
         }
 
         yield return null;
