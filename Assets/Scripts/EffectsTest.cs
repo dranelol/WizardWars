@@ -47,7 +47,7 @@ public class EffectsTest : MonoBehaviour
             StartCoroutine(DoEffect(Effects[effectsItr], 2.0f));
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Vector3 spawnPos = transform.position;
             //spawnPos.y += 10.0f;
@@ -55,20 +55,29 @@ public class EffectsTest : MonoBehaviour
             GameObject proj = (GameObject)Instantiate(projectile, spawnPos, Quaternion.identity);
             
             ProjectileBehaviour projBehaviour = proj.GetComponent<ProjectileBehaviour>();
+            if (projBehaviour != null)
+            {
+                // TARGET THE GROUND BASED ON MOUSE IN THE FUTURE
 
-            // TARGET THE GROUND BASED ON MOUSE IN THE FUTURE
+                Vector3 targetPos = transform.position + (transform.forward * 25.0f);
+                targetPos.y = 0.0f;
+
+                projBehaviour.TargetPosition = targetPos;
+                proj.transform.forward = transform.forward;
+
+                Debug.DrawLine(transform.position, targetPos);
+
+
+                punchCount++;
+            }
             
-            Vector3 targetPos = transform.position + (transform.forward * 25.0f);
-            targetPos.y = 0.0f;
+        }
 
-            projBehaviour.TargetPosition = targetPos;
-            proj.transform.forward = transform.forward;
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Messenger.Broadcast<Transform>("BlackHoleActivate", transform);
 
-            Debug.DrawLine(transform.position, targetPos);
-            
 
-            punchCount++;
-            
         }
 	}
 

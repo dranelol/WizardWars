@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BlackHoleExplode : MonoBehaviour
 {
@@ -11,30 +12,104 @@ public class BlackHoleExplode : MonoBehaviour
 
     public GameObject Particles;
 
-    bool exploded = false;
+    bool exploding = false;
+
+    public bool Activated = false;
+
+    Collider[] gravityObjects;
+
+    HashSet<Collider> cols2 = new HashSet<Collider>();
 	void Awake () 
     {
         timeToExplode = Time.time + TimeToExplode;
+        gravityObjects = new Collider[500];
+
+        Messenger.AddListener<Transform>("BlackHoleActivate", Activate);
+
 	}
 	
 	void Update () 
     {
-        Debug.Log(exploded);
-        if (Time.time > timeToExplode && exploded == false)
+        if (Time.time > timeToExplode && exploding == false)
         {
-            
             StartCoroutine(Explode());
-            exploded = true;
+            
         }
 	}
 
     IEnumerator Explode()
     {
+        exploding = true;
+        while (Activated == false)
+        {
+            
+            Collider[] cols = Physics.OverlapSphere(transform.position, 500);
+            gravityObjects = cols;
+
+            foreach (Collider col in cols)
+            {
+                if (col != null)
+                {
+                    if (col.gameObject != gameObject)
+                    {
+                        if (col.gameObject.layer == LayerMask.NameToLayer("Environment") || col.gameObject.layer == LayerMask.NameToLayer("BlackHoled"))
+                        {
+                            if (col.gameObject.layer == LayerMask.NameToLayer("Environment"))
+                            {
+                                col.gameObject.layer = LayerMask.NameToLayer("BlackHoled");
+                            }
+                            if (col.gameObject.rigidbody == null)
+                            {
+                                col.gameObject.AddComponent<Rigidbody>();
+                            }
+
+                            Rigidbody body = col.gameObject.GetComponent<Rigidbody>();
+
+                            Vector3 distance = transform.position - col.transform.position;
+                            /*
+                            float xInvert = 1.0f / distance.x;
+                            float yInvert = 1.0f / distance.y;
+                            float zInvert = 1.0f / distance.z;
+
+                            Mathf.Clamp01(xInvert);
+                            Mathf.Clamp01(yInvert);
+                            Mathf.Clamp01(zInvert);
+
+                            Vector3 invertDistance = new Vector3(xInvert, yInvert, zInvert);
+                            */
+                            body.AddForce(distance / 2.0f, ForceMode.Impulse);
+
+
+
+                        }
+                    }
+                }
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+        
+       
+        
+
+        yield return null;
+    }
+
+    void Activate(Transform activator)
+    {
+        Debug.Log("activated");
+        Activated = true;
+
+        if (BlackHole != null)
+        {
+            StartCoroutine(activate(activator));
+        }
+    }
+
+    IEnumerator activate(Transform activator)
+    {
         float lerpTime = 1.0f;
         float currentLerpTime = 0.0f;
-
-        Debug.Log("exploding");
-        Collider[] cols = Physics.OverlapSphere(transform.position, 500);
 
         // scale down
         while (Vector3.Distance(BlackHole.transform.localScale, Vector3.zero) > 0.01f)
@@ -55,29 +130,6 @@ public class BlackHoleExplode : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
 
-        Debug.Log("exploding2");
-
-        foreach (Collider col in cols)
-        {
-            if (col != null)
-            {
-                if (col.gameObject != gameObject)
-                {
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Environment"))
-                    {
-                        if (col.gameObject.rigidbody == null)
-                        {
-                            col.gameObject.AddComponent<Rigidbody>();
-                        }
-                        Rigidbody body = col.gameObject.GetComponent<Rigidbody>();
-                        body.AddExplosionForce(2000, transform.position, 50);
-
-
-                    }
-                }
-            }
-        }
-
         Destroy(BlackHole);
 
         ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>();
@@ -92,7 +144,24 @@ public class BlackHoleExplode : MonoBehaviour
 
         }
 
+        // fling objects
+        foreach (Collider col in gravityObjects)
+        {
+            Vector3 forcePosition = transform.forward * 20.0f;
+
+            if (col.gameObject.rigidbody != null)
+            {
+                col.gameObject.rigidbody.velocity = Vector3.zero;
+                Vector3 forceDir = forcePosition - col.gameObject.transform.position;
+                col.gameObject.rigidbody.AddForce(forceDir * 2.0f, ForceMode.Impulse);
+            }
+        }
+
+        Activated = false;
+
         yield return null;
     }
+
+    
 }
 
